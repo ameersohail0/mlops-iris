@@ -4,6 +4,13 @@ from pydantic import BaseModel
 from ml_utils import load_model, predict, retrain
 from typing import List
 
+# library for sending timestamp
+from datetime import datetime
+
+# function to get current timestamp
+def get_timestamp():
+    return int(datetime.now().timestamp()) # returning the Unix Timestamp
+
 # defining the main app
 app = FastAPI(title="Iris Predictor", docs_url="/")
 
@@ -22,6 +29,7 @@ class QueryIn(BaseModel):
 # class which is returned in the response
 class QueryOut(BaseModel):
     flower_class: str
+    timestamp: int
 
 # class which is expected in the payload while re-training
 class FeedbackIn(BaseModel):
@@ -35,7 +43,9 @@ class FeedbackIn(BaseModel):
 @app.get("/ping")
 # Healthcheck route to ensure that the API is up and running
 def ping():
-    return {"ping": "pong"}
+    return {
+        "ping" : "pong",
+        "timestamp" : get_timestamp()}
 
 
 @app.post("/predict_flower", response_model=QueryOut, status_code=200)
@@ -43,7 +53,9 @@ def ping():
 # Payload: QueryIn containing the parameters
 # Response: QueryOut containing the flower_class predicted (200)
 def predict_flower(query_data: QueryIn):
-    output = {"flower_class": predict(query_data)}
+    output = {
+        "flower_class" : predict(query_data),
+        "timestamp" : get_timestamp()}
     return output
 
 @app.post("/feedback_loop", status_code=200)
@@ -52,7 +64,9 @@ def predict_flower(query_data: QueryIn):
 # Response: Dict with detail confirming success (200)
 def feedback_loop(data: List[FeedbackIn]):
     retrain(data)
-    return {"detail": "Feedback loop successful"}
+    return {
+        "detail": "Feedback loop successful",
+        "timestamp" : get_timestamp()}
 
 
 # Main function to start the app when main.py is called
