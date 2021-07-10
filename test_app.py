@@ -7,7 +7,7 @@ def test_ping():
         response = client.get("/ping")
         # asserting the correct response is received
         assert response.status_code == 200
-        assert response.json() == {"ping": "pong"}
+        assert response.json()["ping"] == "pong" # Modifying structure of test, to accomodate timestamp
 
 
 # test to check if Iris Virginica is classified correctly
@@ -23,7 +23,7 @@ def test_pred_virginica():
         response = client.post("/predict_flower", json=payload)
         # asserting the correct response is received
         assert response.status_code == 200
-        assert response.json() == {"flower_class": "Iris Virginica"}
+        assert response.json()["flower_class"] == "Iris Virginica" # Modifying structure of test, to accomodate timestamp
 
 # Task 2
 # Added 2 Test Cases for Iris Versicolour and Iris Setosa
@@ -41,7 +41,7 @@ def test_pred_versicolour():
         response = client.post("/predict_flower", json=payload)
         # asserting the correct response is received
         assert response.status_code == 200
-        assert response.json() == {"flower_class": "Iris Versicolour"}
+        assert response.json()["flower_class"] == "Iris Versicolour" # Modifying structure of test, to accomodate timestamp
 
 # test to check if Iris Setosa is classified correctly
 def test_pred_setosa():
@@ -56,4 +56,4 @@ def test_pred_setosa():
         response = client.post("/predict_flower", json=payload)
         # asserting the correct response is received
         assert response.status_code == 200
-        assert response.json() == {"flower_class": "Iris Setosa"}
+        assert response.json()["flower_class"] == "Iris Setosa" # Modifying structure of test, to accomodate timestamp
